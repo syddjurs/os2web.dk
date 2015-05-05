@@ -1,0 +1,486 @@
+<?php
+/*Implementation of hook_block_info()*/
+function widget_block_info() {
+	$blocks['recent_work_section'] = array(
+      'info' => t('[Liva] Recent work section'),
+  	);
+	//FOOTER
+	$blocks['widget_twitter'] = array(
+        'info' => t('[Liva] Latest Tweets'),
+    );
+	$blocks['widget_flickr'] = array(
+        'info' => t('[Liva] Flickr Widget'),
+    );
+	$blocks['widget_social_network'] = array(
+      'info' => t('[Liva] Social network'),
+  	);
+	
+	//SIDEBAR
+	$blocks['categories_sidebar'] = array(
+      'info' => t('[Liva] Categories sidebar'),
+  	);
+	$blocks['recent_posts_sidebar'] = array(
+      'info' => t('[Liva] Recent posts sidebar'),
+  	);
+	$blocks['widget_latest_project_one'] = array(
+      'info' => t('[Liva] Latest Project'),
+  	);
+	$blocks['tag_cloud_widget'] = array(
+      'info' => t('[Liva] Popular tags widget'),
+  	);
+
+    return $blocks;
+}
+
+/*Implementation of hook_block_configure()*/
+function widget_block_configure($delta = '') {
+    $form = array();
+    switch ($delta) {
+		case 'recent_work_section':
+			$form['recent_work_section_block_count'] = array(
+			  '#type' => 'select',
+			  '#title' => t('Number of items to display'),
+			  '#default_value' => variable_get('recent_work_section_block_count', 8),
+			  '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 'ALL')),
+			);
+			$form['recent_work_section_block_desc'] = array(
+                '#type' => 'textfield',
+                '#title' => t('Description'),
+                '#default_value' => variable_get('recent_work_section_block_desc', 'This is the description'),
+            );
+			break;
+		//FOOTER
+		case 'widget_twitter':
+            $form['widget_twitter_username'] = array(
+                '#type' => 'textfield',
+                '#title' => t('Your twitter username'),
+                '#default_value' => variable_get('widget_twitter_username', 'envato'),
+                '#description' => t('Eg: envato')
+            );
+
+            $form['widget_twitter_tweets_count'] = array(
+                '#type' => 'select',
+                '#title' => t('Number of recent tweets items to display'),
+                '#default_value' => variable_get('widget_twitter_tweets_count', 2),
+                '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+            );
+            break;
+		case 'widget_flickr':
+            $form['widget_flickr_id'] = array(
+                '#type' => 'textfield',
+                '#title' => t('Your flickr ID'),
+                '#default_value' => variable_get('widget_flickr_id', '52617155@N08'),
+                '#description' => t('Eg: 52617155@N08')
+            );
+            $form['widget_flickr_photo_count'] = array(
+                '#type' => 'select',
+                '#title' => t('Number of recent photos items to display'),
+                '#default_value' => variable_get('widget_flickr_photo_count', 6),
+                '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+            );
+            break;
+		case 'widget_social_network':
+			$form['rss'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your RSS url.'),
+			  '#default_value' => variable_get('rss', ''),
+			);
+			$form['flickr'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your Flickr url.'),
+			  '#default_value' => variable_get('flickr', ''),
+			);
+			$form['facebook'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your Facebook url.'),
+			  '#default_value' => variable_get('facebook', ''),
+			);
+			$form['twitter'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your Twitter url.'),
+			  '#default_value' => variable_get('twitter', ''),
+			);
+			$form['googleplus'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your Google plus url.'),
+			  '#default_value' => variable_get('googleplus', ''),
+			);
+			$form['youtube'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your youtube url.'),
+			  '#default_value' => variable_get('youtube', ''),
+			);
+			$form['linkedin'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your linkedin url.'),
+			  '#default_value' => variable_get('linkedin', ''),
+			);
+			$form['skype'] = array(
+			  '#type' => 'textfield',
+			  '#title' => t('Add your skype url.'),
+			  '#default_value' => variable_get('skype', ''),
+			);
+			
+            break;
+			
+			
+			//SIDEBAR
+		case 'categories_sidebar':
+			$vocabulary = taxonomy_get_vocabularies();
+			$checklist_vocab_array = array(); 
+			foreach ($vocabulary as $item) {
+				$key = $item->vid;
+				$value = $item->name;
+				$checklist_vocab_array[$key] = $value;
+			}
+			
+			$form['categories_sidebar_id'] = array(
+			'#type'             => 'select',
+			'#title'            => t('List of current Vocabularies.'),
+			'#position'         => 'left' ,
+			'#options'          => $checklist_vocab_array ,
+			'#default_value'    => variable_get('categories_sidebar_id'),
+			'#description'      => t('List of vocabularies displayed as select'),
+			);
+			// return system_settings_form($form);
+			break;
+		
+		case 'recent_posts_sidebar':
+			$form['recent_posts_sidebar_block_count'] = array(
+			  '#type' => 'select',
+			  '#title' => t('Number of items to display'),
+			  '#default_value' => variable_get('recent_posts_sidebar_block_count', 5),
+			  '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
+			);
+			break;
+			
+		case 'widget_latest_project_one':
+			$form['latest_projects_block_count'] = array(
+				'#type' => 'select',
+				'#title' => t('Number of items to display'),
+				'#default_value' => variable_get('latest_projects_block_count', 4),
+				'#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100)),
+			);
+			break;
+			
+		case 'tag_cloud_widget':
+			$vocabulary_tag_cloud = taxonomy_get_vocabularies();
+			$checklist_vocab_tag_cloud_array = array(); 
+			foreach ($vocabulary_tag_cloud as $item) {
+				$key = $item->vid;
+				$value = $item->name;
+				$checklist_vocab_tag_cloud_array[$key] = $value;
+			}
+					
+			$form['tag_cloud_sidebar_id'] = array(
+			'#type'             => 'select',
+			'#title'            => t('List of current Vocabularies.'),
+			'#position'         => 'left',
+			'#options'          => $checklist_vocab_tag_cloud_array,
+			'#default_value'    => variable_get('tag_cloud_sidebar_id'),
+			'#description'      => t('List of vocabularies displayed as select'),
+			);
+			// return system_settings_form($form);
+			break;
+			
+    }
+
+    return $form;
+}
+
+/*Implementation of hook_block_save()*/
+
+function widget_block_save($delta = '', $edit = array()) {
+    switch ($delta) {
+		case 'recent_work_section':
+			variable_set('recent_work_section_block_count', $edit['recent_work_section_block_count']);
+			variable_set('recent_work_section_block_desc', $edit['recent_work_section_block_desc']);
+			break;
+		//FOOTER
+		case 'widget_twitter':
+            variable_set('widget_twitter_username', $edit['widget_twitter_username']);
+            variable_set('widget_twitter_tweets_count', $edit['widget_twitter_tweets_count']);
+            break;
+		case 'widget_flickr':
+            variable_set('widget_flickr_id', $edit['widget_flickr_id']);
+            variable_set('widget_flickr_photo_count', $edit['widget_flickr_photo_count']);
+            break;
+		case 'widget_social_network':
+			variable_set('rss', $edit['rss']);
+			variable_set('facebook', $edit['facebook']);
+			variable_set('twitter', $edit['twitter']);
+			variable_set('googleplus', $edit['googleplus']);
+			variable_set('youtube', $edit['youtube']);
+			variable_set('linkedin', $edit['linkedin']);
+			variable_set('skype', $edit['skype']);
+			variable_set('flickr', $edit['flickr']);
+			break;
+		
+		//SIDEBAR
+		case 'categories_sidebar':
+			variable_set('categories_sidebar_id', $edit['categories_sidebar_id']);
+			break;
+		case 'recent_posts_sidebar':
+			variable_set('recent_posts_sidebar_block_count', $edit['recent_posts_sidebar_block_count']);
+			break;
+		case 'widget_latest_project_one':
+			variable_set('latest_projects_block_count', $edit['latest_projects_block_count']);
+			break;
+		case 'tag_cloud_widget':
+			variable_set('tag_cloud_sidebar_id', $edit['tag_cloud_sidebar_id']);
+			break;
+			
+    }
+}
+
+/*Implementation of hook_block_view()*/
+
+function widget_block_view($delta = '') {
+    // This example is adapted from node.module.
+    $block = array();
+
+    switch ($delta) {
+		case 'recent_work_section':
+			$node_limit_temp = variable_get('recent_work_section_block_count', 8);
+			if($node_limit_temp == 'ALL')
+				$node_limit = '';
+			else
+				$node_limit = '  LIMIT 0, '.$node_limit_temp;
+			$content_type = 'portfolio';
+			$query = db_query('SELECT n.nid FROM {node} n WHERE n.type = :type AND n.status = 1 ORDER BY n.created DESC' . $node_limit, array(':type' => $content_type));
+			$nids = $query->fetchCol();
+			$nodes = node_load_multiple($nids);
+			
+			$block['title'] = widget_block_get_title($delta);
+			
+			if (!empty($nodes)) {
+				$block['content'] = array(
+					'#theme' => 'recent_work_section',
+					'#nodes' => $nodes,
+					'#title' => $block['title'],
+					'#settings' => array(
+						'desc' => variable_get('recent_work_section_block_desc')
+					)
+				);
+			}
+			break;
+		//FOOTER
+		case 'widget_twitter':
+            $block['title'] = widget_block_get_title($delta);
+            $block['content'] = array(
+                '#theme' => 'widget_twitter',
+                '#settings' => array(
+                    'widget_twitter_username' => variable_get('widget_twitter_username', 'envato'),
+                    'widget_twitter_tweets_count' => variable_get('widget_twitter_tweets_count', 2),
+                ),
+            );
+            break;
+		case 'widget_flickr':
+            $block['title'] = widget_block_get_title($delta);
+			$block['content'] = array(
+                '#theme' => 'widget_flickr',
+                '#settings' => array(
+                    'widget_flickr_id' => variable_get('widget_flickr_id', '52617155@N08'),
+                    'widget_flickr_photo_count' => variable_get('widget_flickr_photo_count', 6),
+                ),
+            );
+            break;
+		case 'widget_social_network':
+			$block['title'] = widget_block_get_title($delta);
+			$block['content'] = array(
+				'#theme' => 'widget_social_network',
+				'#social' => array(
+								'rss'=>variable_get('rss'), 
+								'facebook'=>variable_get('facebook'), 
+								'twitter'=>variable_get('twitter'), 
+								'googleplus'=>variable_get('googleplus'),
+								'youtube'=>variable_get('youtube'),
+								'linkedin'=>variable_get('linkedin'),
+								'skype'=>variable_get('skype'),
+								'flickr'=>variable_get('flickr'),
+								),
+				'#title' => $block['title']
+			);
+			break;
+			
+		//SIDEBAR
+		case 'categories_sidebar':
+			$vid = variable_get('categories_sidebar_id');
+			$terms = taxonomy_get_tree($vid);
+			$block['title'] = widget_block_get_title($delta);
+			if (!empty($terms)) {
+				$block['content'] = array(
+					'#theme' => 'categories_sidebar',
+					'#terms' => $terms,
+					'#title' => $block['title']
+				);
+			}
+			break;
+		case 'recent_posts_sidebar':
+			$node_limit = variable_get('recent_posts_sidebar_block_count', 5);
+			$content_type = 'blog';
+			$query = db_query('SELECT n.nid FROM {node} n WHERE n.type = :type AND n.status = 1 ORDER BY n.created DESC LIMIT 0, ' . $node_limit, array(':type' => $content_type));
+			$nids = $query->fetchCol();
+			$nodes = node_load_multiple($nids);
+			
+			$block['title'] = widget_block_get_title($delta);
+			
+			if (!empty($nodes)) {
+				$block['content'] = array(
+					'#theme' => 'recent_posts_sidebar',
+					'#nodes' => $nodes,
+					'#title' => $block['title']
+				);
+			}
+			
+			break;
+		case 'widget_latest_project_one':
+			$node_limit = variable_get('latest_projects_block_count', 4);
+			$content_type = 'portfolio';
+			$query = db_query('SELECT n.nid FROM {node} n WHERE n.type = :type AND n.status = 1 ORDER BY n.created DESC LIMIT 0, ' . $node_limit, array(':type' => $content_type));
+			$nids = $query->fetchCol();
+			$nodes = node_load_multiple($nids);
+			$block['title'] = '';
+			
+			if (!empty($nodes)) {
+				$block['content'] = array(
+					'#theme' => 'widget_latest_project_one',
+					'#nodes' => $nodes,
+					'#title' => widget_block_get_title($delta),
+					
+				);
+			}
+			
+			break;
+			
+		case 'tag_cloud_widget':
+			$vid = variable_get('tag_cloud_sidebar_id');
+			$terms = taxonomy_get_tree($vid);
+			$block['title'] = widget_block_get_title($delta);
+			if (!empty($terms)) {
+				$block['content'] = array(
+					'#theme' => 'tag_cloud_widget',
+					'#terms' => $terms,
+					'#title' => $block['title']
+				);
+			}
+			break;
+			
+		
+    }
+    return $block;
+}
+
+/*Implementation of hook_theme()*/
+function widget_theme($existing, $type, $theme, $path) {
+    return array(
+		
+		'recent_work_section' => array(
+          'variables' => array('nodes' => NULL, 'title' => NULL, 'settings' => array('desc'=>NULL)),
+          'template' => 'widget_recent_work_section',
+      	),
+		//FOOTER
+		'widget_twitter' => array(
+            'variables' => array('settings' => array('widget_twitter_username' => NULL, 'widget_twitter_tweets_count' => NULL)),
+            'template' => 'widget_twitter'
+        ),
+		'widget_flickr' => array(
+            'variables' => array('settings' => array('widget_flickr_id' => NULL, 'widget_flickr_photo_count' => NULL)),
+            'template' => 'widget_flickr'
+        ),
+		'widget_social_network' => array(
+          'variables' => array('social' => NULL, 'title' => NULL),
+          'template' => 'widget_social_network',
+      	),
+		
+		//SIDEBAR
+		'categories_sidebar' => array(
+          'variables' => array('terms' => NULL, 'title' => NULL),
+          'template' => 'widget_categories_sidebar',
+      	),
+		'recent_posts_sidebar' => array(
+          'variables' => array('nodes' => NULL, 'title' => NULL),
+          'template' => 'widget_recent_posts_sidebar',
+      	),
+		
+		'widget_latest_project_one' => array(
+			'variables' => array('nodes' => NULL, 'title' => NULL),
+			'template' => 'widget_latest_project_one',
+		),
+		'tag_cloud_widget' => array(
+          'variables' => array('terms' => NULL, 'title' => NULL),
+          'template' => 'widget_tag_cloud_widget',
+      	),
+		
+    );
+}
+
+function widget_block_get_title($delta) {
+  $block = db_query('SELECT title FROM {block} WHERE delta = :delta', array(':delta' => $delta))->fetchObject();
+  return $block->title ? $block->title : '';
+}
+
+
+function widget_trim_text($alter, $value) {
+	if (drupal_strlen($value) > $alter['max_length']) {
+		$value = drupal_substr($value, 0, $alter['max_length']);
+		// TODO: replace this with cleanstring of ctools
+		if (!empty($alter['word_boundary'])) {
+			$regex = "(.*)\b.+";
+			if (function_exists('mb_ereg')) {
+				mb_regex_encoding('UTF-8');
+				$found = mb_ereg($regex, $value, $matches);
+			} else {
+				$found = preg_match("/$regex/us", $value, $matches);
+			}
+			if ($found) {
+				$value = $matches[1];
+			}
+		}
+		// Remove scraps of HTML entities from the end of a strings
+		$value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
+		
+		if (!empty($alter['ellipsis'])) {
+			$value .= t('...');
+		}
+	}
+	if (!empty($alter['html'])) {
+		$value = _filter_htmlcorrector($value);
+	}
+
+	return $value;
+}
+
+
+//delete attributes width, height.
+function widget_preprocess_image(&$variables) {
+  foreach (array('width', 'height') as $key) {
+    unset($variables[$key]);
+  }
+}
+
+
+function widget_format_terms($field_category, $node, $limit = NULL) {
+  
+    $category_arr = array();
+    $category = '';
+    
+    if (!empty($node->{$field_category}[LANGUAGE_NONE])) {
+        foreach ($node->{$field_category}[LANGUAGE_NONE] as $item) {
+            $term = taxonomy_term_load($item['tid']);
+            if ($term) {
+                $category_arr[] = $term->name;
+            }
+
+            if ($limit) {
+                if (count($category_arr) == $limit) {
+                    $category = implode(', ', $category_arr);
+                    return $category;
+                }
+            }
+        }
+    }
+    $category = implode(', ', $category_arr);
+
+    return $category;
+}

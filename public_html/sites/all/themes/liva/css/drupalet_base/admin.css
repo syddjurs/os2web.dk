@@ -1,0 +1,64 @@
+.form-radios{
+	width:100%;
+	float:left;
+	margin-top:60px!important;
+	clear:both;
+}
+.form-radios input[type=radio]{
+	margin-right:15px;
+	cursor: pointer;
+	background: #e1e1e1;
+}
+.form-radios .form-item{
+	width: 70px;
+	margin: 0 30px 90px 0!important;
+	float: left;
+}
+.form-radios .form-item label{
+	margin-top: -70px!important;
+	border: 2px solid #fff!important;
+	outline: 1px solid #ddd!important;
+	position: absolute!important;
+	display: block;
+	width: 70px;
+	height: 0px;
+	line-height: 30px;
+	padding-top: 70px!important;
+	cursor: pointer;
+	text-align: center;
+	color: #444;
+	border: 1px solid #fff;
+	outline: 2px solid #a3af7f;
+	font-weight: bold;
+	background:#333
+}
+.form-item label[for="edit-built-in-skins-default"] { background: #4ABE63; }
+.form-item label[for="edit-built-in-skins-bluecss"] { background: #1889C1; }
+.form-item label[for="edit-built-in-skins-browncss"] { background: #B1CB35; }
+.form-item label[for="edit-built-in-skins-cyancss"] { background: #00BDBD; }
+.form-item label[for="edit-built-in-skins-lightbluecss"] { background: #0A70E3; }
+.form-item label[for="edit-built-in-skins-lightgreencss"] { background: #4ABE63; }
+.form-item label[for="edit-built-in-skins-orangecss"] { background: #FF7B29; }
+.form-item label[for="edit-built-in-skins-pinkcss"] { background: #FF00A9; }
+.form-item label[for="edit-built-in-skins-purplecss"] { background: #EE82EE; }
+.form-item label[for="edit-built-in-skins-redcss"] { background: #FF0000; }
+
+.form-item label[for="edit-bg-patterns-default"] { background: #FFF; }
+.form-item label[for="edit-bg-patterns-pattern-onecss"] { background:url(../../images/elements/pattern-one.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-twocss"] { background:url(../../images/elements/pattern-two.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-threecss"] { background:url(../../images/elements/pattern-three.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-fourcss"] { background:url(../../images/elements/pattern-four.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-fivecss"] { background:url(../../images/elements/pattern-five.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-sixcss"] { background:url(../../images/elements/pattern-six.jpg) }
+
+.form-item label[for="edit-bg-patterns-pattern-sevencss"] { background:url(../../images/elements/pattern-seven.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-eightcss"] { background:url(../../images/elements/pattern-eight.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-ninecss"] { background:url(../../images/elements/pattern-nine.jpg) }
+.form-item label[for="edit-bg-patterns-pattern-tencss"] { background:url(../../images/elements/bg.png) }
+
+
+.form-radios .form-item-active label{
+	border: 1px solid #fff!important;
+	outline: 2px solid #a3af7f!important;
+	font-weight: bold!important;
+}

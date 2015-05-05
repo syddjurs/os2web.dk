@@ -1,0 +1,22 @@
+diff --git a/plugins/media_derivatives.conditions.inc b/plugins/media_derivatives.conditions.inc
+index 0ce2034..cfab55c 100644
+--- a/plugins/media_derivatives.conditions.inc
++++ b/plugins/media_derivatives.conditions.inc
+@@ -52,10 +52,15 @@ function media_derivatives_type_support($file, $preset) {
+  */
+ function media_derivatives_type_support_ui() {
+   $form = array();
+-  $types = file_info_file_types();
++  if (function_exists('file_info_file_types')) {
++    $types = file_info_file_types();
++  }
++  else {
++    $types = file_type_get_all_types();
++  }
+ 
+   foreach ($types as $key => $type) {
+-    $types[$key] = $type['label'];
++    $types[$key] = is_array($type) ? check_plain($type['label']) : check_plain($type->label);
+   }
+ 
+   $form['type'] = array(

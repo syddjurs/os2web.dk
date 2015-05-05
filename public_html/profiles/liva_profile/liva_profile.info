@@ -1,0 +1,11 @@
+name = Liva
+description = Install profile for Liva themes
+version = VERSION
+core = 7.x
+
+files[] = liva_profile.profile
+
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "Liva"
+datestamp = "1365027012"

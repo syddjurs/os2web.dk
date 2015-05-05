@@ -1,0 +1,78 @@
+name = 'Liva'
+description = 'Liva drupal theme suitable for Company, Business, Blog and Portfolio.'
+core = '7.x'
+
+
+stylesheets[all][2] = 'css/reset.css'
+
+stylesheets[all][4] = 'css/font-awesome/css/font-awesome.min.css'
+stylesheets[all][5] = 'css/responsive-leyouts.css'
+;sticky menu
+stylesheets[all][6] = 'js/sticky-menu/core.css'
+
+;jquery jcarousel
+stylesheets[all][7] = 'js/jcarousel/skin.css'
+stylesheets[all][8] = 'js/jcarousel/skin2.css'
+
+;faqs
+stylesheets[all][9] = 'js/accordion/accordion.css'
+;tab css
+stylesheets[all][10] = 'js/tabs/tabs-style2.css'
+stylesheets[all][11] = 'js/tabs/tabs.css'
+;testimonials
+stylesheets[all][12] = 'js/testimonials/fadeeffect.css'
+
+stylesheets[all][13] = 'js/progressbar/ui.progress-bar.css'
+;isotope - portfolio page
+stylesheets[all][14] = 'js/portfolio/isotope.css'
+
+
+;CSS update
+stylesheets[all][15] = 'css/update.css'
+
+;get jQuery from the google apis
+scripts[] = 'js/universal/jquery.js'
+;main menu
+scripts[] = 'js/mainmenu/ddsmoothmenu.js'
+scripts[] = 'js/mainmenu/jquery-1.7.1.min.js'
+scripts[] = 'js/mainmenu/selectnav.js'
+scripts[] = 'js/mainmenu/scripts.js'
+;jquery jcarousel
+scripts[] = 'js/jcarousel/jquery.jcarousel.min.js'
+
+;tab
+scripts[] = 'js/tabs/tabs.js'
+scripts[] = 'js/tabs/tabs-style2.js'
+
+;accordion
+scripts[] = 'js/accordion/custom.js'
+
+;scripts[] = 'js/sticky-menu/core.js'
+scripts[] = 'js/progressbar/progress.js'
+
+scripts[] = 'js/update.js'
+scripts[] = 'js/drupalet_admin/base.js'
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;Core regions
+regions[content] = 'Main content'
+regions[main_menu] = 'Main menu'
+regions[section] = 'Section page'
+regions[slideshow] = 'Slideshow'
+;Gmap in Contact page
+regions[gmap] = 'Gmap - Contact page'
+
+;Social network
+regions[social_network] = 'Social network'
+
+;Footer columns
+regions[footer_col_one] = 'Footer col 1'
+regions[footer_col_two] = 'Footer col 2'
+regions[footer_col_three] = 'Footer col 3'
+regions[footer_col_four] = 'Footer col 4'
+
+
+;Sidebar regions
+regions[sidebar_first] = 'Sidebar first'
+regions[sidebar_second] = 'Sidebar second'
