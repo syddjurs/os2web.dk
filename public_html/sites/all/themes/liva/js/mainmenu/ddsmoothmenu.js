@@ -56,9 +56,11 @@ buildmenu:function($, setting){
 			$(this).children('a:eq(0)').removeClass('selected')
 		}
 	)
+
 	$headers.each(function(i){ //loop through each LI header
 		var $curobj=$(this).css({}) //reference current LI header
 		var $subul=$(this).find('ul:eq(0)').css({display:'block'})
+        var $body = $('body')
 		$subul.data('timers', {})
 		this._dimensions={w:this.offsetWidth, h:this.offsetHeight, subulw:$subul.outerWidth(), subulh:$subul.outerHeight()}
 		this.istopheader=$curobj.parents("ul").length==1? true : false //is top level header?
@@ -74,7 +76,7 @@ buildmenu:function($, setting){
 			}
 			this.$shadow=$('<div class="ddshadow'+(this.istopheader? ' toplevelshadow' : '')+'"></div>').prependTo($parentshadow).css({left:this._shadowoffset.x+'px', top:this._shadowoffset.y+'px'})  //insert shadow DIV and set it to parent node for the next shadow div
 		}
-		$curobj.hover(
+		$curobj.mouseenter(
 			function(e){
 				var $targetul=$subul //reference UL to reveal
 				var header=$curobj.get(0) //reference header LI as DOM object
@@ -95,11 +97,13 @@ buildmenu:function($, setting){
 						}
 					}
 				}, ddsmoothmenu.showhidedelay.showdelay)
-			},
+			}
+
+			/*,
 			function(e){
 				var $targetul=$subul
 				var header=$curobj.get(0)
-				clearTimeout($targetul.data('timers').showtimer)
+                clearTimeout($targetul.data('timers').showtimer)
 				$targetul.data('timers').hidetimer=setTimeout(function(){
 					$targetul.animate({height:'hide', opacity:'hide'}, ddsmoothmenu.transition.outtime)
 					if (smoothmenu.shadow.enable){
@@ -109,9 +113,20 @@ buildmenu:function($, setting){
 						header.$shadow.css({overflow:'hidden'}).animate({height:0}, ddsmoothmenu.transition.outtime)
 					}
 				}, ddsmoothmenu.showhidedelay.hidedelay)
-			}
-		) //end hover
+			}*/
+		) //end mouseenter
+
+        // Close all menus if another menu is opened
+
+        //  Close all menus when mouse is clicked on any element
+        $body.click(
+            function (e) {
+                ddsmoothmenu.closemenu($subul, $curobj)
+        })
+
 	}) //end $headers.each()
+
+
 	$mainmenu.find("ul").css({display:'none', visibility:'visible'})
 },
 
@@ -133,7 +148,23 @@ init:function(setting){
 			ddsmoothmenu.buildmenu($, setting)
 		}
 	})
-}
+},
+
+    closemenu:function($subul, $curobj) {
+
+        var $targetul=$subul
+        var header=$curobj.get(0)
+        clearTimeout($targetul.data('timers').showtimer)
+        $targetul.data('timers').hidetimer=setTimeout(function(){
+            $targetul.animate({height:'hide', opacity:'hide'}, ddsmoothmenu.transition.outtime)
+            if (ddsmoothmenu.shadow.enable){
+                if (ddsmoothmenu.detectwebkit){ //in WebKit browsers, set first child shadow's opacity to 0, as "overflow:hidden" doesn't work in them
+                    header.$shadow.children('div:eq(0)').css({opacity:0})
+                }
+                header.$shadow.css({overflow:'hidden'}).animate({height:0}, ddsmoothmenu.transition.outtime)
+            }
+        }, ddsmoothmenu.showhidedelay.hidedelay)
+    }
 
 } //end ddsmoothmenu variable
 
