@@ -77,7 +77,9 @@ buildmenu:function($, setting){
 			this.$shadow=$('<div class="ddshadow'+(this.istopheader? ' toplevelshadow' : '')+'"></div>').prependTo($parentshadow).css({left:this._shadowoffset.x+'px', top:this._shadowoffset.y+'px'})  //insert shadow DIV and set it to parent node for the next shadow div
 		}
 		$curobj.mouseenter(
+
 			function(e){
+
 				var $targetul=$subul //reference UL to reveal
 				var header=$curobj.get(0) //reference header LI as DOM object
 				clearTimeout($targetul.data('timers').hidetimer)
@@ -116,15 +118,14 @@ buildmenu:function($, setting){
 			}*/
 		) //end mouseenter
 
-        // Close all menus if another menu is opened
-
-        //  Close all menus when mouse is clicked on any element
-        $body.click(
-            function (e) {
-                ddsmoothmenu.closemenu($subul, $curobj)
-        })
 
 	}) //end $headers.each()
+
+    //  Close all menus when mouse is clicked on any element
+    $('body').click(
+        function (e) {
+            ddsmoothmenu.closeall($mainmenu);
+    })
 
 
 	$mainmenu.find("ul").css({display:'none', visibility:'visible'})
@@ -150,10 +151,10 @@ init:function(setting){
 	})
 },
 
-    closemenu:function($subul, $curobj) {
+    closeall:function($mainmenu) {
 
-        var $targetul=$subul
-        var header=$curobj.get(0)
+        var $targetul = $mainmenu.find('ul');
+
         clearTimeout($targetul.data('timers').showtimer)
         $targetul.data('timers').hidetimer=setTimeout(function(){
             $targetul.animate({height:'hide', opacity:'hide'}, ddsmoothmenu.transition.outtime)
@@ -163,7 +164,7 @@ init:function(setting){
                 }
                 header.$shadow.css({overflow:'hidden'}).animate({height:0}, ddsmoothmenu.transition.outtime)
             }
-        }, ddsmoothmenu.showhidedelay.hidedelay)
+        }, 0) // Out delay set to zero so menus will start to fade out right away
     }
 
 } //end ddsmoothmenu variable
