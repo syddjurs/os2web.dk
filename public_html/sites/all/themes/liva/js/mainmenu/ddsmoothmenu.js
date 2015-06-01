@@ -57,6 +57,13 @@ buildmenu:function($, setting){
 		}
 	)
 
+
+    // Make sure to close all menu's if mouse enters another top menu item (for everything except first menu item)
+    $mainmenu.children('li').mouseenter(function(e) {
+
+        ddsmoothmenu.closeall($mainmenu);
+    });
+
 	$headers.each(function(i){ //loop through each LI header
 		var $curobj=$(this).css({}) //reference current LI header
 		var $subul=$(this).find('ul:eq(0)').css({display:'block'})
@@ -80,7 +87,7 @@ buildmenu:function($, setting){
 
 			function(e){
 
-                // Make sure to close all menu's if mouse enter another top menu item
+                // Make sure to close all menu's if mouse enters another top menu item (will make first menu item behave as expected)
                 ddsmoothmenu.closeall($mainmenu);
 
 				var $targetul = $subul //reference UL to reveal
