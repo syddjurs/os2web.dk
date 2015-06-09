@@ -48,8 +48,10 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="<?php print $language->language; ?>" class="no-js"> <!--<![endif]-->
 
 <head>
-	<title><?php print $head_title; ?></title>
 	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php print $head_title; ?></title>
 	<?php print $styles; ?>
 	<?php print $scripts; ?>
 	<?php print $head; ?>
