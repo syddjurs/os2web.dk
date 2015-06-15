@@ -57,13 +57,6 @@ buildmenu:function($, setting){
 		}
 	)
 
-
-    // Make sure to close all menu's if mouse enters another top menu item (for everything except first menu item)
-    $mainmenu.children('li').mouseenter(function(e) {
-
-        ddsmoothmenu.closeall($mainmenu);
-    });
-
 	$headers.each(function(i){ //loop through each LI header
 		var $curobj=$(this).css({}) //reference current LI header
 		var $subul=$(this).find('ul:eq(0)').css({display:'block'})
@@ -84,12 +77,7 @@ buildmenu:function($, setting){
 			this.$shadow=$('<div class="ddshadow'+(this.istopheader? ' toplevelshadow' : '')+'"></div>').prependTo($parentshadow).css({left:this._shadowoffset.x+'px', top:this._shadowoffset.y+'px'})  //insert shadow DIV and set it to parent node for the next shadow div
 		}
 		$curobj.mouseenter(
-
 			function(e){
-
-                // Make sure to close all menu's if mouse enters another top menu item (will make first menu item behave as expected)
-                ddsmoothmenu.closeall($mainmenu);
-
 				var $targetul = $subul //reference UL to reveal
 				var header = $curobj.get(0) //reference header LI as DOM object
 				clearTimeout($targetul.data('timers').hidetimer)
@@ -112,6 +100,11 @@ buildmenu:function($, setting){
 			}
 		) //end mouseenter
 
+        // Make sure to close all menus if mouse enters another top menu item
+        var $toplevel = $mainmenu.children('li').children('a');
+        $toplevel.mouseenter(function(e) {
+            ddsmoothmenu.closeall($mainmenu);
+        });
 
 	}) //end $headers.each()
 
