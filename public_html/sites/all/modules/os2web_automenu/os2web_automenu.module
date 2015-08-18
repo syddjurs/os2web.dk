@@ -1,0 +1,162 @@
+<?php
+/**
+ * @file
+ * os2web_automenu.module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function os2web_automenu_menu() {
+  $items['admin/config/content/os2web_automenu'] = array(
+    'title' => 'OS2web automenu',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2web_automenu_settings'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Form callback for settings.
+ */
+function os2web_automenu_settings() {
+  $menu_options = menu_parent_options(menu_get_menus(), 'main-menu');
+
+  $form['os2web_automenu_parent_menu_link'] = array(
+    '#type' => 'select',
+    '#options' => $menu_options,
+    '#title' => 'Top niveau menupunkt',
+    '#default_value' => variable_get('os2web_automenu_parent_menu_link', ''),
+  );
+
+  $content_type_options = node_type_get_names();
+  $form['os2web_automenu_content_type'] = array(
+    '#type' => 'select',
+    '#options' => $content_type_options,
+    '#title' => 'Indholdstype',
+    '#default_value' => variable_get('os2web_automenu_content_type', ''),
+  );
+
+  $form['os2web_automenu_sort_menu'] = array(
+    '#type' => 'submit',
+    '#value' => 'Sortér menu links nu',
+    '#submit' => array('_os2web_automenu_sort_menulinks'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function os2web_automenu_form_alter(&$form, &$form_state, $form_id) {
+  $content_type = variable_get('os2web_automenu_content_type', '');
+
+  // If the contenttype is goverened by this module, take over part of the
+  // menu link form.
+  if (isset($form['#entity']) && $form['#entity']->type == $content_type) {
+    // Tell the user that the title will be overwritten.
+    $form['menu']['link']['link_title']['#prefix'] = '<em>Titlen på menulinket opdateres med nodens titel</em>';
+    $form['menu']['link']['link_title']['#default_value'] = '-Node titel-';
+    $form['menu']['link']['link_title']['#disabled'] = TRUE;
+
+    // Enable create menu link. Don't let the user change the property.
+    $form['menu']['enabled']['#default_value'] = TRUE;
+    $form['menu']['enabled']['#disabled'] = TRUE;
+
+    // Set the parent as specified in module settings. Don't let the user
+    // change the property.
+    $form['menu']['link']['parent']['#default_value'] = variable_get('os2web_automenu_parent_menu_link');
+    $form['menu']['link']['parent']['#disabled'] = TRUE;
+
+    // We reorder the links anyway, so hide the weight field.
+    $form['menu']['link']['weight']['#access'] = FALSE;
+
+    $form['actions']['submit']['#submit'][] = 'os2web_automenu_node_form_handle_menu_links';
+  }
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function os2web_automenu_node_form_handle_menu_links($form, &$form_state) {
+  $node = new stdClass();
+  $node->title = $form_state['values']['title'];
+  $node->menu = os2web_automenu_get_latest_menu_link();
+
+  os2web_automenu_update_node_menu_link($node);
+
+  _os2web_automenu_sort_menulinks();
+}
+
+/**
+ * Update node menu link.
+ */
+function os2web_automenu_update_node_menu_link($node) {
+  if ($node->menu['mlid']) {
+    db_update('menu_links')
+      ->fields(array(
+        'link_title' => $node->title,
+      ))
+      ->condition('mlid', $node->menu['mlid'])
+      ->execute();
+  }
+}
+
+/**
+ * Get latest menu link '-Node titel'.
+ */
+function os2web_automenu_get_latest_menu_link() {
+  if ($parent_menu_link = variable_get('os2web_automenu_parent_menu_link')) {
+    list($menu_name, $mlid) = explode(':', $parent_menu_link);
+
+    $sql = <<<EOL
+    SELECT *
+    FROM  `menu_links`
+    WHERE  `menu_name` LIKE :menu_name
+    AND  `p1` = :mlid
+    AND `link_title` = '-Node titel-'
+EOL;
+
+    $result = db_query($sql, array(':menu_name' => $menu_name, ':mlid' => $mlid))->fetchAssoc();
+
+    return $result;
+  }
+}
+
+/**
+ * Sort menu items by name.
+ */
+function _os2web_automenu_sort_menulinks() {
+  if ($parent_menu_link = variable_get('os2web_automenu_parent_menu_link')) {
+    list($menu_name, $mlid) = explode(':', $parent_menu_link);
+
+    $sql = <<<EOL
+    SELECT *
+    FROM  `menu_links`
+    WHERE  `menu_name` LIKE :menu_name
+    AND  `p1` = :mlid
+    ORDER BY  `menu_links`.`link_title` ASC
+EOL;
+
+    $result = db_query($sql, array(':menu_name' => $menu_name, ':mlid' => $mlid))->fetchAll();
+
+    foreach ($result as $weight => $row) {
+      if ($row->mlid == $mlid) {
+        continue;
+      }
+
+      db_update('menu_links')
+        ->fields(array(
+          'weight' => $weight,
+        ))
+        ->condition('mlid', $row->mlid)
+        ->execute();
+    }
+  }
+
+  // Rebuild menu.
+  menu_rebuild();
+}
