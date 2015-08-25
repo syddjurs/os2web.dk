@@ -1,0 +1,3 @@
+name = os2web_automenu
+core = 7.x
+description = Automatically add menu links for content
