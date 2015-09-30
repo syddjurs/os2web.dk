@@ -56,7 +56,7 @@ function os2web_automenu_form_alter(&$form, &$form_state, $form_id) {
 
   // If the contenttype is goverened by this module, take over part of the
   // menu link form.
-  if (isset($form['#entity']) && $form['#entity']->type == $content_type) {
+  if (isset($form['#entity']) && isset($form['#entity'])) && $form['#entity']->type == $content_type) {
     // Tell the user that the title will be overwritten.
     $form['menu']['link']['link_title']['#prefix'] = '<em>Titlen på menulinket opdateres med nodens titel</em>';
     $form['menu']['link']['link_title']['#default_value'] = '-Node titel-';
