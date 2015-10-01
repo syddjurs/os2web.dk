@@ -33,7 +33,9 @@
 	
 	
 	<?php }else{?>
-	<div class="image_frame<?php print $blog_style_n?>"><a href="<?php print $node_url; ?>" title="<?php print $title; ?>"><img src="<?php print image_style_url($style, $imageone) ?>" alt="<?php print $title; ?>" /></a></div>
+<?
+/*	<div class="image_frame<?php print $blog_style_n?>"><a href="<?php print $node_url; ?>" title="<?php print $title; ?>"><img src="<?php print image_style_url($style, $imageone) ?>" alt="<?php print $title; ?>" /></a></div>
+*/?>
 	<?php
 	}
 	?>
