@@ -1353,16 +1353,15 @@ ul.lirt_section {
 .portfolio_area_left img {
 	padding: 0px;
 	margin: 0px;
-	width: 100%;
+	width: 90%;
 	float: left;
 	-webkit-box-shadow:  0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 	box-shadow:  0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 .portfolio_area_right {
 	padding: 0px;
-	margin: 0px 0px 0px 3%;
-	/* width: 22%; */
-	/* float: left; */
+	width: 25%;
+	float: right;
 }
 .project_details {
 	padding: 0px;
@@ -1411,6 +1410,11 @@ ul.lirt_section {
 .project_details span a:hover {
 	background-color: #ddd;
 }
+
+.portfolio_details_table {
+	width: 100%;
+}
+
 .addto_favorites {
 	padding: 3px 10px 5px 10px;
 	margin: 20px 0px 0px 0px;
